@@ -9,7 +9,8 @@ Currently, the codebase is fairly small.  All you can really do is create ellips
 
 ============================================================
 
-The current codebase
+The Current Codebase
+============================================================
 
 CSDX
 ---------
@@ -25,8 +26,15 @@ ExampleSketch.cs inherits from CSDXCore and overrides the Setup() and Draw() cal
 
 =============================================================
 
+Usage
+-----
+
+Currently, I'd suggest copying the ExampleSketch project and replace the code in Setup() and Draw() in ExampleSketch, but do not forget to make the base calls.
+
+=============================================================
+
 Future plans
-----------------
+=============================================================
 
 I'd like to build a template to automatically create the Program.cs and the main cs file and take any confusion out of the users hands.
 
