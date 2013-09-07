@@ -7,6 +7,8 @@ The idea behind this project was to create a new graphics coding framework in th
 
 Currently, the codebase is fairly small.  All you can really do is create ellipses and rectangles, but I want to fully flush this out.
 
+As of right now, I'm trying to use the latest and greatest, so Windows 8 is required for .NET 4.5.1 and DX11.
+
 ============================================================
 
 The Current Codebase
