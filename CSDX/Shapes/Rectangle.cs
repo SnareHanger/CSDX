@@ -11,14 +11,24 @@ namespace CSDX.Shapes
     internal class Rectangle : ShapeBase
     {
         public RectangleGeometry rectGeometry;
+        public RoundedRectangleGeometry roundRectGeometry = null;
 
-        public Rectangle(float x, float y, float w, float h)
+        public Rectangle(float x, float y, float w, float h, float xRadius = 0, float yRadius = 0)
             : base() {
-            rectGeometry = new RectangleGeometry(factory, new RectangleF(x, y, w, h));
+            RectangleF rect =  new RectangleF(x, y, w, h);
+            rectGeometry = new RectangleGeometry(factory, rect);
+            if (xRadius > 0 || yRadius > 0) {
+                roundRectGeometry = new RoundedRectangleGeometry(factory, new RoundedRectangle() { Rect = rect, RadiusX = xRadius, RadiusY = yRadius });
+            }
+
         }
 
         public void Draw(Color fillColor) {
-            base.Draw(rectGeometry, fillColor);
+            if (roundRectGeometry != null) {
+                base.Draw(roundRectGeometry, fillColor);
+            } else {
+                base.Draw(rectGeometry, fillColor);
+            }
         }
     }
 }

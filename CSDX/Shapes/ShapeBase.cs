@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace CSDX.Shapes
 {
-    internal class ShapeBase
+    internal class ShapeBase : IShape
     {
         internal Factory factory;
         internal RenderTarget renderTarget;
 
         public ShapeBase() {
-            this.factory = CSDXCore.D2DFactory;
-            this.renderTarget = CSDXCore.D2DRenderTarget;
+            this.factory = Core.D2DFactory;
+            this.renderTarget = Core.D2DRenderTarget;
         }
 
         public void Draw(Geometry geometry, Color fillColor) {

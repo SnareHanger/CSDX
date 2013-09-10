@@ -20,64 +20,15 @@ namespace CSDX
     /// <summary>
     /// Core class for CSDX
     /// </summary>
-    public class CSDXCore
+    public class Core : IDisposable
     {
-        private int _windowWidth = 500;
+        private Window _window = new Window();
         /// <summary>
-        /// Width of the rendering window
+        /// Holds properties of the rendering window
         /// </summary>
-        public int WindowWidth {
-            get { return _windowWidth; }
-            private set { _windowWidth = value; }
-        }
-
-        private int _windowHeight = 500;
-        /// <summary>
-        /// Height of the rendering window
-        /// </summary>
-        public int WindowHeight {
-            get { return _windowHeight; }
-            private set { _windowHeight = value; }
-        }
-
-        private int _windowLeft = 10;
-        /// <summary>
-        /// Window distance from left
-        /// </summary>
-        public int WindowLeft {
-            get { return _windowLeft; }
-            private set { _windowLeft = value; }
-        }
-
-        private int _windowTop = 10;
-        /// <summary>
-        /// Window distance from top
-        /// </summary>
-        public int WindowTop {
-            get { return _windowTop; }
-            private set { _windowTop = value; }
-        }
-
-        private string _windowTitle = "My Renderer";
-        /// <summary>
-        /// Title to appear in the title bar
-        /// </summary>
-        public string WindowTitle {
-            get { return _windowTitle; }
-            private set {
-                _windowTitle = value;
-            }
-        }
-
-        private Color _backgroundColor;
-        /// <summary>
-        /// Background color of the sketch
-        /// </summary>
-        public Color BackgroundColor {
-            get {
-                return _backgroundColor;
-            }
-            set { _backgroundColor = value; }
+        public Window Window {
+            get { return _window; }
+            set { _window = value; }
         }
 
         private int _frameCount;
@@ -108,13 +59,15 @@ namespace CSDX
         internal SharpDX.DXGI.Factory factory;
         internal GameTime timing;
 
+        
+
         private Stopwatch sw;
         /// <summary>
         /// Initialization
         /// </summary>
         public virtual void Setup() {
-            form = new RenderForm(WindowTitle);
-            form.SetBounds(WindowLeft, WindowTop, WindowWidth, WindowHeight);
+            form = new RenderForm(Window.Title);
+            form.SetBounds(Window.Left, Window.Top, Window.Width, Window.Height);
             sw = new Stopwatch();
 
             timing = new GameTime();
@@ -122,7 +75,7 @@ namespace CSDX
             SwapChainDescription desc = new SwapChainDescription()
             {
                 BufferCount = 1,
-                ModeDescription = new ModeDescription(WindowWidth, WindowHeight, new Rational(FrameRate, 1), Format.R8G8B8A8_UNorm),
+                ModeDescription = new ModeDescription(Window.Width, Window.Height, new Rational(FrameRate, 1), Format.R8G8B8A8_UNorm),
                 IsWindowed = true,
                 OutputHandle = form.Handle,
                 SampleDescription = new SampleDescription(1, 0),
@@ -154,9 +107,10 @@ namespace CSDX
         /// <param name="width">Width of the window</param>
         /// <param name="height">Height of the window</param>
         public void SetWindowSize(int width, int height, Color backgroundColor) {
-            WindowWidth = width;
-            WindowHeight = height;
-            BackgroundColor = backgroundColor;
+
+            Window.Width = width;
+            Window.Height = height;
+            Window.BackgroundColor = backgroundColor;
         }
 
         /// <summary>
@@ -166,7 +120,7 @@ namespace CSDX
             sw.Start();
             RenderLoop.Run(form, () => {
                 D2DRenderTarget.BeginDraw();
-                D2DRenderTarget.Clear(BackgroundColor);
+                D2DRenderTarget.Clear(Window.BackgroundColor);
                 Draw();
 
                 D2DRenderTarget.EndDraw();
@@ -174,11 +128,7 @@ namespace CSDX
                 FrameCount++;
             });
 
-            renderView.Dispose();
-            backBuffer.Dispose();
-            device.Dispose();
-            swapChain.Dispose();
-            factory.Dispose();
+            Dispose();
         }
 
         /// <summary>
@@ -201,6 +151,11 @@ namespace CSDX
             rectangle.Draw(fillColor);
         }
 
+        public static void roundRect(float x, float y, float w, float h, float xRadius, float yRadius, Color fillColor) {
+            Shapes.Rectangle rectangle = new Shapes.Rectangle(x, y, w, h, xRadius, yRadius);
+            rectangle.Draw(fillColor);
+        }
+
         /// <summary>
         /// Draws an ellipse
         /// </summary>
@@ -212,6 +167,24 @@ namespace CSDX
         public static void ellipse(float x, float y, float w, float h, Color fillColor) {
             Shapes.Ellipse ellipse = new Shapes.Ellipse(x, y, w, h);
             ellipse.Draw(fillColor);
+        }
+
+        /// <summary>
+        /// Draws a point.  (Faking it by calling ellipse, until I figure out how to do something so utterly simple.)
+        /// </summary>
+        /// <param name="x">Horizontal value of the point's position</param>
+        /// <param name="y">Vertical value of the point's position</param>
+        /// <param name="color">Color of the point</param>
+        public static void point(float x, float y, Color color) {
+            ellipse(x, y, 1, 1, color);
+        }
+
+        public void Dispose() {
+            renderView.Dispose();
+            backBuffer.Dispose();
+            device.Dispose();
+            swapChain.Dispose();
+            factory.Dispose();
         }
     }
 }

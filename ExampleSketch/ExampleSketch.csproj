@@ -87,7 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSDX\CSDX.csproj">
-      <Project>{6fa5b667-9186-4771-9799-7cdc18b915bb}</Project>
+      <Project>{1ae3d7c3-e230-4769-badf-148330d0f3f4}</Project>
       <Name>CSDX</Name>
     </ProjectReference>
   </ItemGroup>
