@@ -1,15 +1,11 @@
-﻿using SharpDX;
-using SharpDX.Direct2D1;
+using Vortice.Mathematics;
+using Vortice.Direct2D1;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSDX.Shapes
 {
     internal interface IShape
     {
-        void Draw(Geometry geometry, Color fillColor);
+        void Draw(ID2D1Geometry geometry, Color4 fillColor);
     }
 }

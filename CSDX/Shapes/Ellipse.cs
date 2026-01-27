@@ -1,23 +1,21 @@
-﻿using SharpDX;
-using SharpDX.Direct2D1;
+using Vortice.Mathematics;
+using Vortice.Direct2D1;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 
 namespace CSDX.Shapes
 {
     internal class Ellipse : ShapeBase
     {
-        public EllipseGeometry ellipseGeometry;
+        public ID2D1EllipseGeometry ellipseGeometry;
 
         public Ellipse(float x, float y, float xRadius, float yRadius) : base() {
             Vector2 center = new Vector2(x, y);
-            ellipseGeometry = new EllipseGeometry(this.factory, new SharpDX.Direct2D1.Ellipse(center, xRadius, yRadius));
+            Vortice.Direct2D1.Ellipse ellipse = new Vortice.Direct2D1.Ellipse(center, xRadius, yRadius);
+            ellipseGeometry = this.factory.CreateEllipseGeometry(ellipse);
         }
 
-        public void Draw(Color fillColor) {
+        public void Draw(Color4 fillColor) {
             base.Draw(ellipseGeometry, fillColor);
         }
     }

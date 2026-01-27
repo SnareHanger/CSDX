@@ -1,9 +1,5 @@
-﻿using SharpDX;
+using Vortice.Mathematics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSDX
 {
@@ -56,11 +52,11 @@ namespace CSDX
             }
         }
 
-        private Color _backgroundColor;
+        private Color4 _backgroundColor;
         /// <summary>
         /// Background color of the sketch
         /// </summary>
-        public Color BackgroundColor {
+        public Color4 BackgroundColor {
             get {
                 return _backgroundColor;
             }
