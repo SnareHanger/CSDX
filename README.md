@@ -1,45 +1,72 @@
-CSDX
-====
+# CSDX
 
-C#/DirectX based graphics coding framework based on SharpDX (http://www.sharpdx.org)
+[![Build and Test](https://github.com/SnareHanger/CSDX/actions/workflows/test.yml/badge.svg)](https://github.com/SnareHanger/CSDX/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/SnareHanger/CSDX/branch/main/graph/badge.svg)](https://codecov.io/gh/SnareHanger/CSDX)
+
+C#/DirectX based graphics coding framework using [Vortice.Windows](https://github.com/amerkoleci/Vortice.Windows).
 
 The idea behind this project was to create a new graphics coding framework in the same vein as Processing, openFrameworks and Cinder, for C# and .NET programmers or those wanting to learn C# as well as the workings of DirectX.
 
-Currently, the codebase is fairly small.  All you can really do is create ellipses and rectangles, but I want to fully flush this out.
+## Requirements
 
-As of right now, I'm trying to use the latest and greatest, so Windows 8 is required for .NET 4.5.1 and DX11.
+- Windows 10/11
+- .NET 8.0 SDK
+- DirectX 11 compatible GPU
 
-============================================================
+## The Current Codebase
 
-The Current Codebase
-============================================================
+### CSDX
 
-CSDX
----------
-This is the main library.  Contains calls to SharpDX functionality and abstracts a lot of the time-consuming and difficult stuff.
+This is the main library. Contains calls to Vortice/DirectX functionality and abstracts a lot of the time-consuming and difficult stuff.
 
-CSDXCore is  the main class of the library.  Used to create the DX window and will contain static calls to other classes in the library.
+`Core` is the main class of the library. Used to create the DX window and contains static calls to other classes in the library.
 
-ExampleSketch
----------------------
-The ExampleSketch is fairly basic.  Program.cs creates a reference to the main class where all setup and drawing will be done and then calls Setup and StartDraw to begin the render loop.
+### ExampleSketch
 
-ExampleSketch.cs inherits from CSDXCore and overrides the Setup() and Draw() calls.  These two methods will be where most of the work is done and are both required.
+The ExampleSketch is fairly basic. `Program.cs` creates a reference to the main class where all setup and drawing will be done and then calls `Setup()` and `StartDraw()` to begin the render loop.
 
-=============================================================
+`ExampleSketch.cs` inherits from `Core` and overrides the `Setup()` and `Draw()` calls. These two methods will be where most of the work is done and are both required.
 
-Usage
------
+## Usage
 
-Currently, I'd suggest copying the ExampleSketch project and replace the code in Setup() and Draw() in ExampleSketch, but do not forget to make the base calls.
+Currently, I'd suggest copying the ExampleSketch project and replace the code in `Setup()` and `Draw()` in ExampleSketch, but do not forget to make the base calls.
 
-=============================================================
+```csharp
+public class MySketch : Core
+{
+    public override void Setup()
+    {
+        SetWindowSize(800, 600, new Color4(0.1f, 0.1f, 0.1f, 1.0f));
+        base.Setup();
+    }
 
-Future plans
-=============================================================
+    public override void Draw()
+    {
+        // Draw a red rectangle
+        rect(100, 100, 200, 150, new Color4(1.0f, 0.0f, 0.0f, 1.0f));
 
-I'd like to build a template to automatically create the Program.cs and the main cs file and take any confusion out of the users hands.
+        // Draw a blue ellipse
+        ellipse(400, 300, 100, 80, new Color4(0.0f, 0.0f, 1.0f, 1.0f));
+    }
+}
+```
 
-Otherwise it's basically creating new methods as I/we see fit and getting this thing off the ground.
+## Building
 
-Also, a learning experience for me to learn a lot more about programming and DirectX.
+```bash
+dotnet build
+```
+
+## Running Tests
+
+```bash
+dotnet test
+```
+
+## Future Plans
+
+- Add more shape primitives (lines, polygons, bezier curves)
+- Add stroke/outline support for shapes
+- Add text rendering
+- Add image/texture support
+- Create project templates for easy setup
