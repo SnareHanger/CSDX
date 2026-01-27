@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSDX", "CSDX\CSDX.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleSketch", "ExampleSketch\ExampleSketch.csproj", "{A398D559-8876-456A-8FE8-0236CFB570C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSDX.Tests", "CSDX.Tests\CSDX.Tests.csproj", "{B2E5A7D1-4C3F-4A8E-9D6B-1F2E3C4D5A6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A398D559-8876-456A-8FE8-0236CFB570C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A398D559-8876-456A-8FE8-0236CFB570C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A398D559-8876-456A-8FE8-0236CFB570C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2E5A7D1-4C3F-4A8E-9D6B-1F2E3C4D5A6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2E5A7D1-4C3F-4A8E-9D6B-1F2E3C4D5A6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2E5A7D1-4C3F-4A8E-9D6B-1F2E3C4D5A6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2E5A7D1-4C3F-4A8E-9D6B-1F2E3C4D5A6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
