@@ -1,13 +1,13 @@
 CSDX
 ====
 
-C#/DirectX based graphics coding framework based on SharpDX (http://www.sharpdx.org)
+C#/DirectX based graphics coding framework based on Vortice (https://github.com/amerkoleci/Vortice.Windows)
 
 The idea behind this project was to create a new graphics coding framework in the same vein as Processing, openFrameworks and Cinder, for C# and .NET programmers or those wanting to learn C# as well as the workings of DirectX.
 
 Currently, the codebase is fairly small.  All you can really do is create ellipses and rectangles, but I want to fully flush this out.
 
-As of right now, I'm trying to use the latest and greatest, so Windows 8 is required for .NET 4.5.1 and DX11.
+As of right now, I'm trying to use the latest and greatest, so this runs on .NET 10
 
 ============================================================
 
@@ -16,7 +16,7 @@ The Current Codebase
 
 CSDX
 ---------
-This is the main library.  Contains calls to SharpDX functionality and abstracts a lot of the time-consuming and difficult stuff.
+This is the main library.  Contains calls to Vortice functionality and abstracts a lot of the time-consuming and difficult stuff.
 
 CSDXCore is  the main class of the library.  Used to create the DX window and will contain static calls to other classes in the library.
 
