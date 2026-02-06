@@ -1,33 +1,27 @@
-﻿using SharpDX;
-using SharpDX.Direct2D1;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Vortice.Direct2D1;
+using Color = System.Drawing.Color;
 
 namespace CSDX.Shapes
 {
-    internal class Rectangle : ShapeBase
+    internal class Rectangle : ShapeBase, IShape
     {
-        public RectangleGeometry rectGeometry;
-        public RoundedRectangleGeometry roundRectGeometry = null;
+        private System.Drawing.RectangleF _rect;
+        private RoundedRectangle? _roundedRect;
 
         public Rectangle(float x, float y, float w, float h, float xRadius = 0, float yRadius = 0)
             : base() {
-            RectangleF rect =  new RectangleF(x, y, w, h);
-            rectGeometry = new RectangleGeometry(factory, rect);
+            _rect = new System.Drawing.RectangleF(x, y, w, h);
             if (xRadius > 0 || yRadius > 0) {
-                roundRectGeometry = new RoundedRectangleGeometry(factory, new RoundedRectangle() { Rect = rect, RadiusX = xRadius, RadiusY = yRadius });
+                _roundedRect = new RoundedRectangle(_rect, xRadius, yRadius);
             }
-
         }
 
         public void Draw(Color fillColor) {
-            if (roundRectGeometry != null) {
-                base.Draw(roundRectGeometry, fillColor);
+            using var brush = renderTarget.CreateSolidColorBrush(Core.ToColor4(fillColor));
+            if (_roundedRect.HasValue) {
+                renderTarget.FillRoundedRectangle(_roundedRect.Value, brush);
             } else {
-                base.Draw(rectGeometry, fillColor);
+                renderTarget.FillRectangle(_rect, brush);
             }
         }
     }

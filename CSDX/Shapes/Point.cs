@@ -1,22 +1,17 @@
-﻿using SharpDX;
-using SharpDX.Direct2D1;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Color = System.Drawing.Color;
 
 namespace CSDX.Shapes
 {
-    internal class Point : ShapeBase
+    internal class Point : ShapeBase, IShape
     {
-        Ellipse pointGeometry;
-        public Point(float x, float y) : base() {            
-            pointGeometry = new Ellipse(x, y, 1, 1);
+        private Ellipse _ellipse;
+
+        public Point(float x, float y) : base() {
+            _ellipse = new Ellipse(x, y, 1, 1);
         }
 
         public void Draw(Color fillColor) {
-            base.Draw(pointGeometry.ellipseGeometry, fillColor);
+            _ellipse.Draw(fillColor);
         }
     }
 }

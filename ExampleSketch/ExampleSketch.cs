@@ -1,8 +1,6 @@
-﻿using CSDX;
-using CSDX.Shapes;
-using SharpDX;
+using CSDX;
 using System;
-using System.Collections.Generic;
+using System.Drawing;
 
 namespace ExampleSketch
 {
@@ -21,7 +19,8 @@ namespace ExampleSketch
             Random rand = new Random();
 
             for (int j = 0; j < 400; j++) {
-                point(rand.NextFloat(0, j), rand.NextFloat(0, j), rand.NextColor());
+                point((float)(rand.NextDouble() * j), (float)(rand.NextDouble() * j),
+                      Color.FromArgb(rand.Next(256), rand.Next(256), rand.Next(256)));
             }
 
             for (int i = 0; i < 10; i++) {
