@@ -1,17 +1,12 @@
-﻿using SharpDX;
-using SharpDX.DXGI;
-using SharpDX.Direct2D1;
-using SharpDX.Direct3D11;
-using SharpDX.Windows;
+using Vortice.DXGI;
+using Vortice.Direct2D1;
+using Vortice.Direct3D;
+using Vortice.Direct3D11;
+using Vortice.Mathematics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Device1 = SharpDX.Direct3D11.Device;
+using System.Windows.Forms;
 using System.Diagnostics;
-using SharpDX.Toolkit;
+using Color = System.Drawing.Color;
 
 using Shapes = CSDX.Shapes;
 
@@ -49,56 +44,64 @@ namespace CSDX
         }
 
 
-        public static RenderTarget D2DRenderTarget;
-        public static SharpDX.Direct2D1.Factory D2DFactory;
-        internal RenderForm form;
-        internal SwapChain swapChain;
-        internal Device1 device;
-        internal RenderTargetView renderView;
-        internal Texture2D backBuffer;
-        internal SharpDX.DXGI.Factory factory;
-        internal GameTime timing;
-
-        
+        public static ID2D1RenderTarget D2DRenderTarget;
+        public static ID2D1Factory D2DFactory;
+        internal Form form;
+        internal IDXGISwapChain swapChain;
+        internal ID3D11Device device;
+        internal ID3D11DeviceContext deviceContext;
+        internal IDXGIFactory1 dxgiFactory;
 
         private Stopwatch sw;
         /// <summary>
         /// Initialization
         /// </summary>
         public virtual void Setup() {
-            form = new RenderForm(Window.Title);
+            form = new Form();
+            form.Text = Window.Title;
             form.SetBounds(Window.Left, Window.Top, Window.Width, Window.Height);
             sw = new Stopwatch();
 
-            timing = new GameTime();
+            // Create DXGI Factory
+            dxgiFactory = DXGI.CreateDXGIFactory1<IDXGIFactory1>();
 
-            SwapChainDescription desc = new SwapChainDescription()
+            // Create D3D11 Device
+            D3D11.D3D11CreateDevice(
+                null,
+                DriverType.Hardware,
+                DeviceCreationFlags.BgraSupport,
+                null,
+                out device,
+                out _,
+                out deviceContext
+            );
+
+            // Create Swap Chain
+            var desc = new SwapChainDescription()
             {
                 BufferCount = 1,
-                ModeDescription = new ModeDescription(Window.Width, Window.Height, new Rational(FrameRate, 1), Format.R8G8B8A8_UNorm),
-                IsWindowed = true,
-                OutputHandle = form.Handle,
+                BufferDescription = new ModeDescription((uint)Window.Width, (uint)Window.Height, new Rational((uint)FrameRate, 1), Format.R8G8B8A8_UNorm),
+                Windowed = true,
+                OutputWindow = form.Handle,
                 SampleDescription = new SampleDescription(1, 0),
                 SwapEffect = SwapEffect.Discard,
-                Usage = Usage.RenderTargetOutput
+                BufferUsage = Usage.RenderTargetOutput
             };
 
+            swapChain = dxgiFactory.CreateSwapChain(device, desc);
+            dxgiFactory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll);
 
-            Device1.CreateWithSwapChain(SharpDX.Direct3D.DriverType.Hardware, DeviceCreationFlags.BgraSupport, desc, out device, out swapChain);
+            // Create D2D1 Factory
+            D2DFactory = D2D1.D2D1CreateFactory<ID2D1Factory>(FactoryType.SingleThreaded);
 
-            D2DFactory = new SharpDX.Direct2D1.Factory();
+            // Get backbuffer surface and create D2D render target
+            using var backBuffer = swapChain.GetBuffer<ID3D11Texture2D>(0);
+            using var surface = backBuffer.QueryInterface<IDXGISurface>();
 
-            factory = swapChain.GetParent<SharpDX.DXGI.Factory>();
-            factory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll);
-
-            backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
-            renderView = new RenderTargetView(device, backBuffer);
-
-            Surface surface = backBuffer.QueryInterface<Surface>();
-
-            D2DRenderTarget = new RenderTarget(D2DFactory, surface, new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)));
-
-
+            D2DRenderTarget = D2DFactory.CreateDxgiSurfaceRenderTarget(
+                surface,
+                new RenderTargetProperties(new Vortice.DCommon.PixelFormat(Format.Unknown, Vortice.DCommon.AlphaMode.Premultiplied))
+            );
         }
 
         /// <summary>
@@ -118,15 +121,18 @@ namespace CSDX
         /// </summary>
         public void StartDraw() {
             sw.Start();
-            RenderLoop.Run(form, () => {
-                D2DRenderTarget.BeginDraw();
-                D2DRenderTarget.Clear(Window.BackgroundColor);
-                Draw();
+            form.Show();
+            while (form.Created) {
+                Application.DoEvents();
+                if (!form.Visible) continue;
 
+                D2DRenderTarget.BeginDraw();
+                D2DRenderTarget.Clear(ToColor4(Window.BackgroundColor));
+                Draw();
                 D2DRenderTarget.EndDraw();
                 swapChain.Present(0, PresentFlags.None);
                 FrameCount++;
-            });
+            }
 
             Dispose();
         }
@@ -179,12 +185,17 @@ namespace CSDX
             ellipse(x, y, 1, 1, color);
         }
 
+        internal static Color4 ToColor4(Color c) {
+            return new Color4(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f);
+        }
+
         public void Dispose() {
-            renderView.Dispose();
-            backBuffer.Dispose();
-            device.Dispose();
-            swapChain.Dispose();
-            factory.Dispose();
+            D2DRenderTarget?.Dispose();
+            D2DFactory?.Dispose();
+            deviceContext?.Dispose();
+            device?.Dispose();
+            swapChain?.Dispose();
+            dxgiFactory?.Dispose();
         }
     }
 }
